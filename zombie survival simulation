@@ -1,0 +1,115 @@
+/********************************************************
+ * CS 103 Zombie-pocalypse PA
+ * Name: Trent Herdtner
+ * USC email: therdtne@usc.edu
+ * Comments (you want us to know):
+ *
+ * PURPOSE OF PROGRAM: Statistically simulate, in the event
+  of a zombie apocalypse, what the expected values would be for 
+  average nights, maximum nights, and minimum nights that 
+  would exist until the entire original population is zombies, 
+  starting with an initial amount of zombies.
+ ********************************************************/
+
+// Add other #includes if you need
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <climits>
+#include <iomanip>
+using namespace std;
+
+const int MAXPOP = 100000;
+int N; //total population
+int k; //initial number of zombies
+int M; //number of simulations to run
+int s; //seed for random number generator
+
+ 
+
+
+int main()
+{
+  // Array with enough entries for the maximum population size possible.
+  bool pop[MAXPOP];
+  double ave = 0; //average nights
+  double max = 0; // maximum nights
+  double min = INT_MAX; // minimum nights
+  // Your code here
+  cout << "Please enter the following values: N, k, M, s" << endl;
+  cin >> N >> k >> M >> s;
+  srand(s);
+
+	for (int i=0; i<M; i++) // this is for simulations (m) 
+  {
+    int nights = 0;
+
+    for (int j=0; j<N; j++) //initialize population people 
+    {
+      pop[j] = false;
+    }
+    for(int j=0; j<k; j++) // initialize population zombies
+    {
+      pop[j] = true;
+    }
+
+    bool is_everyone_dead = false;
+    
+
+
+    while (is_everyone_dead == false) //loop for nights
+    {
+      int zombies = 0; 
+      
+      for (int j = 0; j < N; j++) //counts number of zombies
+      {
+        if (pop[j] == true)
+        {
+          zombies = zombies + 1;
+        }
+        
+      }
+      
+
+     for (int j=0; j < zombies; j++) 
+      {
+        pop[rand() % N] = true;
+      }
+      
+      bool someone_is_alive = false;
+
+      for (int j=0; j < N; j++) //someone is alive if array of population j is false
+      {
+        if (pop[j] == false)
+        {
+          someone_is_alive = true;
+        }
+      }
+      
+      if (someone_is_alive == false)
+      {
+        is_everyone_dead = true;
+      }
+      
+      nights++;
+    
+    }
+    
+    if (max < nights) //finding maximum number of nights
+    {
+      max = nights;
+    } 
+    if (min > nights) // finding minimum number of nights
+    {
+      min = nights;
+    }
+    
+    ave = nights + ave;  
+  }
+  
+  ave = ave/M;
+
+  cout << "Average Nights: " << ave << endl << "Maximum Nights: " << max << endl << "Minimum Nights: " << min << endl;
+
+  return 0;
+}
